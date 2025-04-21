@@ -1,7 +1,6 @@
 const btn = document.querySelector('.talk');
 const content = document.querySelector('.content');
 
-// Speak Function
 function speak(text) {
     const text_speak = new SpeechSynthesisUtterance(text);
     text_speak.rate = 1;
@@ -10,7 +9,6 @@ function speak(text) {
     window.speechSynthesis.speak(text_speak);
 }
 
-// Greeting Based on Time
 function wishMe() {
     const hour = new Date().getHours();
     if (hour >= 0 && hour < 12) {
@@ -22,13 +20,11 @@ function wishMe() {
     }
 }
 
-// On Load
 window.addEventListener('load', () => {
-    speak("Initializing JARVIS...");
+    speak("Initializing Nova...");
     wishMe();
 });
 
-// Voice Recognition Setup
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 
@@ -44,188 +40,66 @@ btn.addEventListener('click', () => {
     recognition.start();
 });
 
-// Command-Handler Array
-const commands = [
-    {
-        condition: msg => msg.includes('hey') || msg.includes('hello'),
-        action: () => speak("Hello Jitendra, How Can I Help You?")
-    },
-    {
-        condition: msg => msg.includes("open google"),
-        action: () => {
-            window.open("https://google.com", "_blank");
-            speak("Opening Google...");
-        }
-    },
-    {
-        condition: msg => msg.includes("open youtube"),
-        action: () => {
-            window.open("https://youtube.com", "_blank");
-            speak("Opening YouTube...");
-        }
-    },
-    {
-        condition: msg => msg.includes("tell something about me"),
-        action: () => speak("Your Name is Jitendra")
-    },
-    {
-        condition: msg => msg.includes("open whatsapp"),
-        action: () => {
-            window.open("https://whatsapp.com", "_blank");
-            speak("Opening WhatsApp...");
-        }
-    },
-    {
-        condition: msg => msg.includes("open facebook"),
-        action: () => {
-            window.open("https://facebook.com", "_blank");
-            speak("Opening Facebook...");
-        }
-    },
-    {
-        condition: msg => msg.includes("open github"),
-        action: () => {
-            window.open("https://github.com", "_blank");
-            speak("Opening GitHub...");
-        }
-    },
-    {
-        condition: msg => msg.includes("open linkedin"),
-        action: () => {
-            window.open("https://linkedin.com", "_blank");
-            speak("Opening LinkedIn...");
-        }
-    },
-    {
-        condition: msg => msg.includes("play") && msg.includes("on youtube"),
-        action: (msg) => {
-            const query = msg.replace("play", "").replace("on youtube", "").trim();
-            window.open(`https://www.youtube.com/results?search_query=${query}`, "_blank");
-            speak(`Searching for ${query} on YouTube...`);
-        }
-    },
-    {
-        condition: msg => msg.includes("weather"),
-        action: () => {
-            window.open("https://www.google.com/search?q=weather", "_blank");
-            speak("Here is the weather forecast.");
-        }
-    },
-    {
-        condition: msg => msg.includes("wikipedia"),
-        action: (msg) => {
-            const topic = msg.replace("wikipedia", "").trim();
-            window.open(`https://en.wikipedia.org/wiki/${topic}`, "_blank");
-            speak(`This is what I found on Wikipedia regarding ${topic}`);
-        }
-    },
-    {
-        condition: msg => msg.includes("time"),
-        action: () => {
-            const time = new Date().toLocaleTimeString();
-            speak("The current time is " + time);
-        }
-    },
-    {
-        condition: msg => msg.includes("date"),
-        action: () => {
-            const date = new Date().toLocaleDateString();
-            speak("Today's date is " + date);
-        }
-    },
-    {
-        condition: msg => msg.includes("calculator"),
-        action: () => {
-            window.open("Calculator:///");
-            speak("Opening Calculator");
-        }
-    },
-    {
-        condition: msg => msg.includes("scroll down"),
-        action: () => {
-            window.scrollBy(0, 500);
-            speak("Scrolling down...");
-        }
-    },
-    {
-        condition: msg => msg.includes("scroll up"),
-        action: () => {
-            window.scrollBy(0, -500);
-            speak("Scrolling up...");
-        }
-    },
-    {
-        condition: msg => msg.includes("greet me"),
-        action: () => {
-            const hour = new Date().getHours();
-            const greet =
-                hour < 12 ? "Good morning" :
-                hour < 18 ? "Good afternoon" :
-                "Good evening";
-            speak(`${greet}, Jitendra!`);
-        }
-    },
-    {
-        condition: msg => msg.includes("tell me a joke"),
-        action: () => {
-            const jokes = [
-                "Why don’t scientists trust atoms? Because they make up everything!",
-                "I told my computer I needed a break, and it said 'No problem — I'll go to sleep!'",
-                "Why do JavaScript developers wear glasses? Because they don't C#."
-            ];
-            const joke = jokes[Math.floor(Math.random() * jokes.length)];
-            speak(joke);
-        }
-    },
-    {
-        condition: msg => msg.includes("motivate me"),
-        action: () => {
-            const quotes = [
-                "Believe in yourself and all that you are.",
-                "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-                "Your limitation—it's only your imagination."
-            ];
-            const quote = quotes[Math.floor(Math.random() * quotes.length)];
-            speak(quote);
-        }
-    },
-    {
-        condition: msg => msg.includes("set timer for"),
-        action: (msg) => {
-            const mins = parseInt(msg.match(/\d+/)?.[0] || 0);
-            if (mins > 0) {
-                speak(`Setting a timer for ${mins} minutes`);
-                setTimeout(() => {
-                    speak("Time's up!");
-                    alert("Timer Finished!");
-                }, mins * 60000);
-            } else {
-                speak("Sorry, I couldn't understand the time duration.");
-            }
-        }
-    },
-    {
-        condition: msg => msg.includes('what is') || msg.includes('who is') || msg.includes('what are'),
-        action: (msg) => {
-            window.open(`https://www.google.com/search?q=${msg.replace(" ", "+")}`, "_blank");
-            speak("This is what I found on the internet regarding " + msg);
-        }
-    },
-    {
-        condition: () => true, // fallback command
-        action: (msg) => {
-            window.open(`https://www.google.com/search?q=${msg.replace(" ", "+")}`, "_blank");
-            speak("I found some information for " + msg + " on Google");
-        }
+function calculate(msg) {
+    try {
+        msg = msg.replace(/plus/g, "+")
+                 .replace(/minus/g, "-")
+                 .replace(/into|multiply|times/g, "*")
+                 .replace(/divide|by/g, "/");
+        const result = eval(msg);
+        speak(`The result is ${result}`);
+    } catch {
+        speak("Sorry, I couldn't calculate that.");
     }
-];
+}
 
-// Command Processor
+function toggleTheme(mode) {
+    if (mode === "dark") {
+        document.body.classList.add("dark-mode");
+        speak("Dark mode activated.");
+    } else if (mode === "light") {
+        document.body.classList.remove("dark-mode");
+        speak("Light mode activated.");
+    }
+}
+
 function takeCommand(message) {
-    for (const cmd of commands) {
-        if (cmd.condition(message)) {
-            cmd.action(message);
-            break;
-        }
+    if (message.includes('hey') || message.includes('hello')) {
+        speak("Hello Jitendra, How Can I Help You?");
+    } else if (message.includes("open google")) {
+        window.open("https://google.com", "_blank");
+        speak("Opening Google...");
+    } else if (message.includes("open youtube")) {
+        window.open("https://youtube.com", "_blank");
+        speak("Opening Youtube...");
+    } else if (message.includes("tell something about me")) {
+        speak("Your Name is Jitendra");
+    } else if (message.includes("open whatsapp")) {
+        window.open("https://whatsapp.com", "_blank");
+        speak("Opening Whatsapp...");
+    } else if (message.includes("open facebook")) {
+        window.open("https://facebook.com", "_blank");
+        speak("Opening Facebook...");
+    } else if (message.includes('what is') || message.includes('who is') || message.includes('what are')) {
+        window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
+        speak("This is what I found on the internet regarding " + message);
+    } else if (message.includes('wikipedia')) {
+        window.open(`https://en.wikipedia.org/wiki/${message.replace("wikipedia", "").trim()}`, "_blank");
+        speak("This is what I found on Wikipedia regarding " + message);
+    } else if (message.includes('time')) {
+        const time = new Date().toLocaleString(undefined, { hour: "numeric", minute: "numeric" });
+        speak("The current time is " + time);
+    } else if (message.includes('date')) {
+        const date = new Date().toLocaleString(undefined, { month: "short", day: "numeric" });
+        speak("Today's date is " + date);
+    } else if (message.includes('calculator') || message.includes('plus') || message.includes('minus') || message.includes('divide') || message.includes('multiply')) {
+        calculate(message);
+    } else if (message.includes("dark mode")) {
+        toggleTheme("dark");
+    } else if (message.includes("light mode")) {
+        toggleTheme("light");
+    } else {
+        window.open(`https://www.google.com/search?q=${message.replace(" ", "+")}`, "_blank");
+        speak("I found some information for " + message + " on Google");
     }
 }
